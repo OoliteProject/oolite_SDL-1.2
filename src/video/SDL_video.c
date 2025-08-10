@@ -243,6 +243,7 @@ int SDL_VideoInit (const char *driver_name, Uint32 flags)
 	video->gl_config.green_size = 3;
 	video->gl_config.blue_size = 2;
 	video->gl_config.alpha_size = 0;
+	video->gl_config.pixel_type_rgba_float = 0;
 	video->gl_config.buffer_size = 0;
 	video->gl_config.depth_size = 16;
 	video->gl_config.stencil_size = 0;
@@ -1480,6 +1481,9 @@ int SDL_GL_SetAttribute( SDL_GLattr attr, int value )
 			break;
 		case SDL_GL_ALPHA_SIZE:
 			video->gl_config.alpha_size = value;
+			break;
+		case SDL_GL_PIXEL_TYPE_FLOAT:
+			video->gl_config.pixel_type_rgba_float = value;
 			break;
 		case SDL_GL_DOUBLEBUFFER:
 			video->gl_config.double_buffer = value;

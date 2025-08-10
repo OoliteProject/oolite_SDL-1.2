@@ -98,6 +98,7 @@
 
 /* Enable various input drivers */
 #define SDL_JOYSTICK_IOKIT	1
+#define SDL_HAPTIC_IOKIT	1
 
 /* Enable various shared object loading systems */
 #ifdef __ppc__
@@ -138,6 +139,7 @@
 /* Enable OpenGL support */
 #define SDL_VIDEO_OPENGL	1
 #define SDL_VIDEO_OPENGL_GLX 1
+#define SDL_VIDEO_RENDER_OGL 1
 
 /* Disable screensaver */
 #define SDL_VIDEO_DISABLE_SCREENSAVER	1

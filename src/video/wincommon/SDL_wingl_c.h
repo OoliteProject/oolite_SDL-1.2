@@ -124,6 +124,7 @@ extern void *WIN_GL_GetProcAddress(_THIS, const char* proc);
 #define WGL_SWAP_COPY_ARB              0x2029
 #define WGL_SWAP_UNDEFINED_ARB         0x202A
 #define WGL_TYPE_RGBA_ARB              0x202B
+#define WGL_TYPE_RGBA_FLOAT_ARB        0x21A0
 #define WGL_TYPE_COLORINDEX_ARB        0x202C
 #endif
 

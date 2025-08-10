@@ -195,7 +195,7 @@ int SDL_JoystickOpened(int device_index)
 	return(opened);
 }
 
-static int ValidJoystick(SDL_Joystick **joystick)
+int SDL_PrivateJoystickValid(SDL_Joystick **joystick)
 {
 	int valid;
 
@@ -213,7 +213,7 @@ static int ValidJoystick(SDL_Joystick **joystick)
  */
 int SDL_JoystickIndex(SDL_Joystick *joystick)
 {
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return(-1);
 	}
 	return(joystick->index);
@@ -224,7 +224,7 @@ int SDL_JoystickIndex(SDL_Joystick *joystick)
  */
 int SDL_JoystickNumAxes(SDL_Joystick *joystick)
 {
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return(-1);
 	}
 	return(joystick->naxes);
@@ -235,7 +235,7 @@ int SDL_JoystickNumAxes(SDL_Joystick *joystick)
  */
 int SDL_JoystickNumHats(SDL_Joystick *joystick)
 {
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return(-1);
 	}
 	return(joystick->nhats);
@@ -246,7 +246,7 @@ int SDL_JoystickNumHats(SDL_Joystick *joystick)
  */
 int SDL_JoystickNumBalls(SDL_Joystick *joystick)
 {
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return(-1);
 	}
 	return(joystick->nballs);
@@ -257,7 +257,7 @@ int SDL_JoystickNumBalls(SDL_Joystick *joystick)
  */
 int SDL_JoystickNumButtons(SDL_Joystick *joystick)
 {
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return(-1);
 	}
 	return(joystick->nbuttons);
@@ -270,7 +270,7 @@ Sint16 SDL_JoystickGetAxis(SDL_Joystick *joystick, int axis)
 {
 	Sint16 state;
 
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return(0);
 	}
 	if ( axis < joystick->naxes ) {
@@ -289,7 +289,7 @@ Uint8 SDL_JoystickGetHat(SDL_Joystick *joystick, int hat)
 {
 	Uint8 state;
 
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return(0);
 	}
 	if ( hat < joystick->nhats ) {
@@ -308,7 +308,7 @@ int SDL_JoystickGetBall(SDL_Joystick *joystick, int ball, int *dx, int *dy)
 {
 	int retval;
 
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return(-1);
 	}
 
@@ -336,7 +336,7 @@ Uint8 SDL_JoystickGetButton(SDL_Joystick *joystick, int button)
 {
 	Uint8 state;
 
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return(0);
 	}
 	if ( button < joystick->nbuttons ) {
@@ -355,7 +355,7 @@ void SDL_JoystickClose(SDL_Joystick *joystick)
 {
 	int i;
 
-	if ( ! ValidJoystick(&joystick) ) {
+	if ( ! SDL_PrivateJoystickValid(&joystick) ) {
 		return;
 	}
 

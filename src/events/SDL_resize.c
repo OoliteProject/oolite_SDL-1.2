@@ -49,6 +49,11 @@ int SDL_PrivateResize(int w, int h)
 	last_resize.w = w;
 	last_resize.h = h;
 
+#ifdef __WIN32__
+	SDL_VideoSurface->w = w;
+	SDL_VideoSurface->h = h;
+#endif
+
 	SDL_SetMouseRange(w, h);
 
 	/* Pull out all old resize events */

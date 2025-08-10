@@ -32,13 +32,11 @@
 #include <sys/ioctl.h>
 #include <limits.h>		/* For the definition of PATH_MAX */
 #include <linux/joystick.h>
-#if SDL_INPUT_LINUXEV
-#include <linux/input.h>
-#endif
 
 #include "SDL_joystick.h"
 #include "../SDL_sysjoystick.h"
 #include "../SDL_joystick_c.h"
+#include "SDL_sysjoystick_c.h"
 
 /* Special joystick configurations */
 static struct {
@@ -270,32 +268,6 @@ static struct
         int logicalno;
 #endif /* USE_LOGICAL_JOYSTICKS */
 } SDL_joylist[MAX_JOYSTICKS];
-
-
-/* The private structure used to keep track of a joystick */
-struct joystick_hwdata {
-	int fd;
-	/* The current linux joystick driver maps hats to two axes */
-	struct hwdata_hat {
-		int axis[2];
-	} *hats;
-	/* The current linux joystick driver maps balls to two axes */
-	struct hwdata_ball {
-		int axis[2];
-	} *balls;
-
-	/* Support for the Linux 2.4 unified input interface */
-#if SDL_INPUT_LINUXEV
-	SDL_bool is_hid;
-	Uint8 key_map[KEY_MAX-BTN_MISC];
-	Uint8 abs_map[ABS_MAX];
-	struct axis_correct {
-		int used;
-		int minimum;
-		int maximum;
-	} abs_correct[ABS_MAX];
-#endif
-};
 
 
 #ifndef NO_LOGICAL_JOYSTICKS
@@ -787,6 +759,7 @@ static void ConfigLogicalJoystick(SDL_Joystick *joystick)
 int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 {
 	int fd;
+	char *fname;
 	SDL_logical_joydecl(int realindex);
 	SDL_logical_joydecl(SDL_Joystick *realjoy = NULL);
 
@@ -800,9 +773,11 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 			return(-1);
                                                                                 
 		fd = realjoy->hwdata->fd;
+		fname = realjoy->hwdata->fname;
 
 	} else {
 		fd = open(SDL_joylist[joystick->index].fname, O_RDONLY, 0);
+		fname = SDL_joylist[joystick->index].fname;
 	}
 	SDL_joylist[joystick->index].joy = joystick;
 #else
@@ -822,10 +797,8 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 		return(-1);
 	}
 	SDL_memset(joystick->hwdata, 0, sizeof(*joystick->hwdata));
-#if SDL_INPUT_LINUXEV
-	SDL_memset(joystick->hwdata->abs_map, ABS_MAX, sizeof(*joystick->hwdata->abs_map)*ABS_MAX);
-#endif
 	joystick->hwdata->fd = fd;
+	joystick->hwdata->fname = fname;
 
 	/* Set the joystick to non-blocking read mode */
 	fcntl(fd, F_SETFL, O_NONBLOCK);
