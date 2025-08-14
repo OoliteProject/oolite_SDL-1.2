@@ -2702,7 +2702,7 @@ case "$host" in
         # Set up the system libraries we need
         EXTRA_LDFLAGS="$EXTRA_LDFLAGS -luser32 -lgdi32 -lwinmm"
         if test x$have_directx = xyes; then
-            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ldxguid"
+            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ldxguid -ldinput8 -ldxerr8 -lole32"
         fi
         BUILD_LDFLAGS="$BUILD_LDFLAGS -Wc,-static-libgcc"
         # The Win32 platform requires special setup

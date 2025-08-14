@@ -1,5 +1,6 @@
 #define UNICODE 1
 #include "SDL_config.h"
+#include "SDL.h"
 #include <windows.h>
 
 /* Some compilers use a special export keyword */
@@ -59,6 +60,28 @@ HWND SDL_HelperWindow = NULL;
 static WCHAR *SDL_HelperWindowClassName = TEXT("SDLHelperWindowInputCatcher");
 static WCHAR *SDL_HelperWindowName = TEXT("SDLHelperWindowInputMsgWindow");
 static ATOM SDL_HelperWindowClass = 0;
+
+/* Sets an error message based on GetLastError() */
+int
+WIN_SetErrorFromHRESULT(const char *prefix, HRESULT hr)
+{
+    TCHAR buffer[1024];
+    char *message;
+    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, 0,
+                  buffer, SDL_arraysize(buffer), NULL);
+    message = SDL_iconv_string("UTF-8", "UTF-16LE", (char *)buffer, (wcslen(buffer)+1)*sizeof(WCHAR));
+	//WIN_StringToUTF8(buffer);
+    SDL_SetError("%s%s%s", prefix ? prefix : "", prefix ? ": " : "", message);
+    SDL_free(message);
+    return -1;
+}
+
+/* Sets an error message based on GetLastError() */
+int
+WIN_SetError(const char *prefix)
+{
+    return WIN_SetErrorFromHRESULT(prefix, GetLastError());
+}
 
 /*
  * Creates a HelperWindow used for DirectInput events.
@@ -127,28 +150,4 @@ SDL_HelperWindowDestroy(void)
         }
         SDL_HelperWindowClass = 0;
     }
-}
-
-
-/* Sets an error message based on GetLastError() */
-int
-WIN_SetErrorFromHRESULT(const char *prefix, HRESULT hr)
-{
-    TCHAR buffer[1024];
-    char *message;
-    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, 0,
-                  buffer, SDL_arraysize(buffer), NULL);
-    message = SDL_iconv_string("UTF-8", "UTF-16LE", (char *)buffer, (wcslen(buffer)+1)*sizeof(WCHAR));
-	//WIN_StringToUTF8(buffer);
-    SDL_SetError("%s%s%s", prefix ? prefix : "", prefix ? ": " : "", message);
-    SDL_free(message);
-    return -1;
-}
-
-
-/* Sets an error message based on GetLastError() */
-int
-WIN_SetError(const char *prefix)
-{
-    return WIN_SetErrorFromHRESULT(prefix, GetLastError());
 }

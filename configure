@@ -923,6 +923,7 @@ enable_audio
 enable_video
 enable_events
 enable_joystick
+enable_haptic
 enable_cdrom
 enable_threads
 enable_timers
@@ -1653,6 +1654,8 @@ Optional Features:
   --enable-video          Enable the video subsystem [default=yes]
   --enable-events         Enable the events subsystem [default=yes]
   --enable-joystick       Enable the joystick subsystem [default=yes]
+  --enable-haptic         Enable the haptic (force feedback) subsystem
+                          [[default=yes]]
   --enable-cdrom          Enable the cdrom subsystem [default=yes]
   --enable-threads        Enable the threading subsystem [default=yes]
   --enable-timers         Enable the timer subsystem [default=yes]
@@ -2027,8 +2030,8 @@ fi
 
 # ac_fn_c_try_run LINENO
 # ----------------------
-# Try to run conftest.$ac_ext, and return whether this succeeded. Assumes that
-# executables *can* be run.
+# Try to link conftest.$ac_ext, and return whether this succeeded. Assumes
+# that executables *can* be run.
 ac_fn_c_try_run ()
 {
   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
@@ -2162,7 +2165,7 @@ else
 #define $2 innocuous_$2
 
 /* System header to define __stub macros and hopefully few prototypes,
-    which can conflict with char $2 (); below.
+    which can conflict with char $2 (void); below.
     Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
     <limits.h> exists even on freestanding compilers.  */
 
@@ -2180,7 +2183,7 @@ else
 #ifdef __cplusplus
 extern "C"
 #endif
-char $2 ();
+char $2 (void);
 /* The GNU C library defines this for functions which it implements
     to always fail with ENOSYS.  Some functions are actually named
     something starting with __ and the normal name is an alias.  */
@@ -2189,7 +2192,7 @@ choke me
 #endif
 
 int
-main ()
+main (void)
 {
 return $2 ();
   ;
@@ -2349,7 +2352,7 @@ else
 /* end confdefs.h.  */
 $4
 int
-main ()
+main (void)
 {
 if (sizeof ($2))
 	 return 0;
@@ -2362,7 +2365,7 @@ if ac_fn_c_try_compile "$LINENO"; then :
 /* end confdefs.h.  */
 $4
 int
-main ()
+main (void)
 {
 if (sizeof (($2)))
 	    return 0;
@@ -2402,7 +2405,7 @@ else
 /* end confdefs.h.  */
 $5
 int
-main ()
+main (void)
 {
 static $2 ac_aggr;
 if (ac_aggr.$3)
@@ -2418,7 +2421,7 @@ else
 /* end confdefs.h.  */
 $5
 int
-main ()
+main (void)
 {
 static $2 ac_aggr;
 if (sizeof ac_aggr.$3)
@@ -2457,7 +2460,7 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 $4
 int
-main ()
+main (void)
 {
 static int test_array [1 - 2 * !(($2) >= 0)];
 test_array [0] = 0;
@@ -2474,7 +2477,7 @@ if ac_fn_c_try_compile "$LINENO"; then :
 /* end confdefs.h.  */
 $4
 int
-main ()
+main (void)
 {
 static int test_array [1 - 2 * !(($2) <= $ac_mid)];
 test_array [0] = 0;
@@ -2501,7 +2504,7 @@ else
 /* end confdefs.h.  */
 $4
 int
-main ()
+main (void)
 {
 static int test_array [1 - 2 * !(($2) < 0)];
 test_array [0] = 0;
@@ -2518,7 +2521,7 @@ if ac_fn_c_try_compile "$LINENO"; then :
 /* end confdefs.h.  */
 $4
 int
-main ()
+main (void)
 {
 static int test_array [1 - 2 * !(($2) >= $ac_mid)];
 test_array [0] = 0;
@@ -2553,7 +2556,7 @@ while test "x$ac_lo" != "x$ac_hi"; do
 /* end confdefs.h.  */
 $4
 int
-main ()
+main (void)
 {
 static int test_array [1 - 2 * !(($2) <= $ac_mid)];
 test_array [0] = 0;
@@ -2578,12 +2581,12 @@ esac
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 $4
-static long int longval () { return $2; }
-static unsigned long int ulongval () { return $2; }
+static long int longval (void) { return $2; }
+static unsigned long int ulongval (void) { return $2; }
 #include <stdio.h>
 #include <stdlib.h>
 int
-main ()
+main (void)
 {
 
   FILE *f = fopen ("conftest.val", "w");
@@ -2736,8 +2739,6 @@ done
 # WARNING: Use '\'' to represent an apostrophe within the trap.
 # WARNING: Do not start the trap code with a newline, due to a FreeBSD 4.0 bug.
 trap 'exit_status=$?
-  # Sanitize IFS.
-  IFS=" ""	$as_nl"
   # Save into config.log some information that might help in debugging.
   {
     echo
@@ -3314,7 +3315,7 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -3454,11 +3455,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <stdio.h>
 int
-main ()
+main (void)
 {
 FILE *f = fopen ("conftest.out", "w");
- if (!f)
-  return 1;
  return ferror (f) || fclose (f) != 0;
 
   ;
@@ -3470,9 +3469,7 @@ ac_clean_files="$ac_clean_files conftest.out"
 # the compiler is broken, or we cross compile.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are cross compiling" >&5
 $as_echo_n "checking whether we are cross compiling... " >&6; }
-if test "$cross_compiling" = maybe && test "x$build" != "x$host"; then
-  cross_compiling=yes
-elif test "$cross_compiling" != yes; then
+if test "$cross_compiling" != yes; then
   { { ac_try="$ac_link"
 case "(($ac_try" in
   *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
@@ -3522,7 +3519,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -3573,7 +3570,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 #ifndef __GNUC__
        choke me
@@ -3614,7 +3611,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -3629,7 +3626,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -3645,7 +3642,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -3694,9 +3691,7 @@ struct stat;
 /* Most of the following tests are stolen from RCS 5.7's src/conf.sh.  */
 struct buf { int x; };
 FILE * (*rcsopen) (struct buf *, struct stat *, int);
-static char *e (p, i)
-     char **p;
-     int i;
+static char *e (char **p, int i)
 {
   return p[i];
 }
@@ -3731,7 +3726,7 @@ int pairnames (int, char **, FILE *(*)(struct buf *, struct stat *, int), int, i
 int argc;
 char **argv;
 int
-main ()
+main (void)
 {
 return f (e, argv, 0) != argv[0]  ||  f (e, argv, 1) != argv[1];
   ;
@@ -4057,7 +4052,7 @@ else
 #include <float.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -4127,7 +4122,7 @@ else
 
 #define XOR(e, f) (((e) && !(f)) || (!(e) && (f)))
 int
-main ()
+main (void)
 {
   int i;
   for (i = 0; i < 256; i++)
@@ -4206,7 +4201,7 @@ else
 #         define __EXTENSIONS__ 1
           $ac_includes_default
 int
-main ()
+main (void)
 {
 
   ;
@@ -4839,13 +4834,13 @@ if ${lt_cv_nm_interface+:} false; then :
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:4842: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:4837: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:4845: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:4840: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:4848: output\"" >&5)
+  (eval echo "\"\$as_me:4843: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -6058,7 +6053,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6061 "configure"' > conftest.$ac_ext
+  echo '#line 6056 "configure"' > conftest.$ac_ext
   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -6168,7 +6163,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -6754,7 +6749,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -6786,7 +6781,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -7653,11 +7648,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7656: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7651: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7660: \$? = $ac_status" >&5
+   echo "$as_me:7655: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8002,11 +7997,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8005: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8000: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8009: \$? = $ac_status" >&5
+   echo "$as_me:8004: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8107,11 +8102,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8110: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8105: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8114: \$? = $ac_status" >&5
+   echo "$as_me:8109: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8162,11 +8157,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8165: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8160: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8169: \$? = $ac_status" >&5
+   echo "$as_me:8164: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8695,7 +8690,7 @@ _LT_EOF
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -8735,7 +8730,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -9915,7 +9910,7 @@ linux* | k*bsd*-gnu)
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -10353,9 +10348,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char dlopen ();
+char dlopen (void);
 int
-main ()
+main (void)
 {
 return dlopen ();
   ;
@@ -10406,9 +10401,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char shl_load ();
+char shl_load (void);
 int
-main ()
+main (void)
 {
 return shl_load ();
   ;
@@ -10449,9 +10444,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char dlopen ();
+char dlopen (void);
 int
-main ()
+main (void)
 {
 return dlopen ();
   ;
@@ -10488,9 +10483,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char dlopen ();
+char dlopen (void);
 int
-main ()
+main (void)
 {
 return dlopen ();
   ;
@@ -10527,9 +10522,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char dld_link ();
+char dld_link (void);
 int
-main ()
+main (void)
 {
 return dld_link ();
   ;
@@ -10597,7 +10592,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 10600 "configure"
+#line 10595 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10693,7 +10688,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 10696 "configure"
+#line 10691 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10981,7 +10976,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 	     #include <sys/param.h>
 
 int
-main ()
+main (void)
 {
 #if ! (defined BYTE_ORDER && defined BIG_ENDIAN \
 		     && defined LITTLE_ENDIAN && BYTE_ORDER && BIG_ENDIAN \
@@ -11001,7 +10996,7 @@ if ac_fn_c_try_compile "$LINENO"; then :
 		#include <sys/param.h>
 
 int
-main ()
+main (void)
 {
 #if BYTE_ORDER != BIG_ENDIAN
 		 not big endian
@@ -11027,7 +11022,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 #include <limits.h>
 
 int
-main ()
+main (void)
 {
 #if ! (defined _LITTLE_ENDIAN || defined _BIG_ENDIAN)
 	      bogus endian macros
@@ -11044,7 +11039,7 @@ if ac_fn_c_try_compile "$LINENO"; then :
 #include <limits.h>
 
 int
-main ()
+main (void)
 {
 #ifndef _BIG_ENDIAN
 		 not big endian
@@ -11069,36 +11064,35 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
   # Try to guess by grepping values from an object file.
 	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-unsigned short int ascii_mm[] =
+short int ascii_mm[] =
 		  { 0x4249, 0x4765, 0x6E44, 0x6961, 0x6E53, 0x7953, 0 };
-		unsigned short int ascii_ii[] =
+		short int ascii_ii[] =
 		  { 0x694C, 0x5454, 0x656C, 0x6E45, 0x6944, 0x6E61, 0 };
 		int use_ascii (int i) {
 		  return ascii_mm[i] + ascii_ii[i];
 		}
-		unsigned short int ebcdic_ii[] =
+		short int ebcdic_ii[] =
 		  { 0x89D3, 0xE3E3, 0x8593, 0x95C5, 0x89C4, 0x9581, 0 };
-		unsigned short int ebcdic_mm[] =
+		short int ebcdic_mm[] =
 		  { 0xC2C9, 0xC785, 0x95C4, 0x8981, 0x95E2, 0xA8E2, 0 };
 		int use_ebcdic (int i) {
 		  return ebcdic_mm[i] + ebcdic_ii[i];
 		}
-		int
-		main (int argc, char **argv)
-		{
-		  /* Intimidate the compiler so that it does not
-		     optimize the arrays away.  */
-		  char *p = argv[0];
-		  ascii_mm[1] = *p++; ebcdic_mm[1] = *p++;
-		  ascii_ii[1] = *p++; ebcdic_ii[1] = *p++;
-		  return use_ascii (argc) == use_ebcdic (*p);
-		}
+		extern int foo;
+
+int
+main (void)
+{
+return use_ascii (foo) == use_ebcdic (foo);
+  ;
+  return 0;
+}
 _ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  if grep BIGenDianSyS conftest$ac_exeext >/dev/null; then
+if ac_fn_c_try_compile "$LINENO"; then :
+  if grep BIGenDianSyS conftest.$ac_objext >/dev/null; then
 	      ac_cv_c_bigendian=yes
 	    fi
-	    if grep LiTTleEnDian conftest$ac_exeext >/dev/null ; then
+	    if grep LiTTleEnDian conftest.$ac_objext >/dev/null ; then
 	      if test "$ac_cv_c_bigendian" = unknown; then
 		ac_cv_c_bigendian=no
 	      else
@@ -11107,14 +11101,13 @@ if ac_fn_c_try_link "$LINENO"; then :
 	      fi
 	    fi
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 $ac_includes_default
 int
-main ()
+main (void)
 {
 
 	     /* Are we little or big endian?  From Harbison&Steele.  */
@@ -11504,7 +11497,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 #ifndef __GNUC__
        choke me
@@ -11545,7 +11538,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -11560,7 +11553,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -11576,7 +11569,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -11625,9 +11618,7 @@ struct stat;
 /* Most of the following tests are stolen from RCS 5.7's src/conf.sh.  */
 struct buf { int x; };
 FILE * (*rcsopen) (struct buf *, struct stat *, int);
-static char *e (p, i)
-     char **p;
-     int i;
+static char *e (char **p, int i)
 {
   return p[i];
 }
@@ -11662,7 +11653,7 @@ int pairnames (int, char **, FILE *(*)(struct buf *, struct stat *, int), int, i
 int argc;
 char **argv;
 int
-main ()
+main (void)
 {
 return f (e, argv, 0) != argv[0]  ||  f (e, argv, 1) != argv[1];
   ;
@@ -11851,7 +11842,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 #ifndef __GNUC__
        choke me
@@ -11892,7 +11883,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -11907,7 +11898,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -11923,7 +11914,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -12109,7 +12100,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 #ifndef __GNUC__
        choke me
@@ -12150,7 +12141,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -12165,7 +12156,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -12181,7 +12172,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -12746,7 +12737,7 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -12787,7 +12778,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -14144,11 +14135,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14147: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14138: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14151: \$? = $ac_status" >&5
+   echo "$as_me:14142: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14243,11 +14234,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14246: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14237: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14250: \$? = $ac_status" >&5
+   echo "$as_me:14241: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14295,11 +14286,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14298: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14289: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14302: \$? = $ac_status" >&5
+   echo "$as_me:14293: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14886,7 +14877,7 @@ linux* | k*bsd*-gnu)
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -15666,7 +15657,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
 #ifndef __cplusplus
@@ -15749,8 +15740,8 @@ for ac_kw in inline __inline__ __inline; do
 /* end confdefs.h.  */
 #ifndef __cplusplus
 typedef int foo_t;
-static $ac_kw foo_t static_foo () {return 0; }
-$ac_kw foo_t foo () {return 0; }
+static $ac_kw foo_t static_foo (void) {return 0; }
+$ac_kw foo_t foo (void) {return 0; }
 #endif
 
 _ACEOF
@@ -15789,7 +15780,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
 volatile int x;
@@ -15839,7 +15830,7 @@ else
 #include <float.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -15909,7 +15900,7 @@ else
 
 #define XOR(e, f) (((e) && !(f)) || (!(e) && (f)))
 int
-main ()
+main (void)
 {
   int i;
   for (i = 0; i < 256; i++)
@@ -15987,7 +15978,7 @@ else
 /* end confdefs.h.  */
 #include <alloca.h>
 int
-main ()
+main (void)
 {
 char *p = (char *) alloca (2 * sizeof (int));
 			  if (p) return 0;
@@ -16016,31 +16007,31 @@ $as_echo_n "checking for alloca... " >&6; }
 if ${ac_cv_func_alloca_works+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  if test $ac_cv_working_alloca_h = yes; then
-  ac_cv_func_alloca_works=yes
-else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#if defined STDC_HEADERS || defined HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-#include <stddef.h>
-#ifndef alloca
-# ifdef __GNUC__
-#  define alloca __builtin_alloca
-# elif defined _MSC_VER
+#ifdef __GNUC__
+# define alloca __builtin_alloca
+#else
+# ifdef _MSC_VER
 #  include <malloc.h>
 #  define alloca _alloca
 # else
-#  ifdef  __cplusplus
-extern "C"
-#  endif
+#  ifdef HAVE_ALLOCA_H
+#   include <alloca.h>
+#  else
+#   ifdef _AIX
+ #pragma alloca
+#   else
+#    ifndef alloca /* predefined by HP cc +Olibcalls */
 void *alloca (size_t);
+#    endif
+#   endif
+#  endif
 # endif
 #endif
 
 int
-main ()
+main (void)
 {
 char *p = (char *) alloca (1);
 				    if (p) return 0;
@@ -16052,12 +16043,9 @@ if ac_fn_c_try_link "$LINENO"; then :
   ac_cv_func_alloca_works=yes
 else
   ac_cv_func_alloca_works=no
-
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-fi
-
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_alloca_works" >&5
 $as_echo "$ac_cv_func_alloca_works" >&6; }
@@ -16175,7 +16163,7 @@ if test "x$ac_cv_func_mprotect" = xyes; then :
           #include <sys/mman.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -16220,9 +16208,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char libiconv_open ();
+char libiconv_open (void);
 int
-main ()
+main (void)
 {
 return libiconv_open ();
   ;
@@ -16260,9 +16248,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char pow ();
+char pow (void);
 int
-main ()
+main (void)
 {
 return pow ();
   ;
@@ -16574,6 +16562,19 @@ if test x$enable_joystick != xyes; then
 else
     SOURCES="$SOURCES $srcdir/src/joystick/*.c"
 fi
+# Check whether --enable-haptic was given.
+if test "${enable_haptic+set}" = set; then :
+  enableval=$enable_haptic;
+else
+  enable_haptic=yes
+fi
+
+if test x$enable_haptic != xyes; then
+    $as_echo "#define SDL_HAPTIC_DISABLED 1" >>confdefs.h
+
+else
+    SOURCES="$SOURCES $srcdir/src/haptic/*.c"
+fi
 # Check whether --enable-cdrom was given.
 if test "${enable_cdrom+set}" = set; then :
   enableval=$enable_cdrom;
@@ -16672,7 +16673,7 @@ $as_echo_n "checking for OSS audio support... " >&6; }
               #include <sys/soundcard.h>
 
 int
-main ()
+main (void)
 {
 
               int arg = SNDCTL_DSP_SETFRAGMENT;
@@ -16693,7 +16694,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
               #include <soundcard.h>
 
 int
-main ()
+main (void)
 {
 
               int arg = SNDCTL_DSP_SETFRAGMENT;
@@ -16818,7 +16819,7 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #include <alsa/asoundlib.h>
 
 int
-main ()
+main (void)
 {
 
 /* ensure backward compatibility */
@@ -16892,9 +16893,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char snd_ctl_open ();
+char snd_ctl_open (void);
 int
-main ()
+main (void)
 {
 return snd_ctl_open ();
   ;
@@ -16995,7 +16996,7 @@ $as_echo_n "checking for dmedia audio support... " >&6; }
           #include <dmedia/audio.h>
 
 int
-main ()
+main (void)
 {
 
           ALport audio_port;
@@ -17044,7 +17045,7 @@ $as_echo_n "checking for MME audio support... " >&6; }
           #include <mme_api.h>
 
 int
-main ()
+main (void)
 {
 
           HWAVEOUT sound;
@@ -17277,7 +17278,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 #include <esd.h>
 
 int
-main ()
+main (void)
 {
  return 0;
   ;
@@ -17386,9 +17387,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char sio_open ();
+char sio_open (void);
 int
-main ()
+main (void)
 {
 return sio_open ();
   ;
@@ -17623,7 +17624,7 @@ $as_echo_n "checking for aRts development environment... " >&6; }
              #include <artsc.h>
 
 int
-main ()
+main (void)
 {
 
              arts_stream_t stream;
@@ -17706,9 +17707,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char AuOpenServer ();
+char AuOpenServer (void);
 int
-main ()
+main (void)
 {
 return AuOpenServer ();
   ;
@@ -18032,7 +18033,7 @@ $as_echo_n "checking for Altivec with GCC altivec.h and -maltivec option... " >&
         }
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -18060,7 +18061,7 @@ $as_echo_n "checking for Altivec with GCC -maltivec option... " >&6; }
             }
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -18113,7 +18114,7 @@ $as_echo_n "checking for Altivec with GCC -faltivec option... " >&6; }
         }
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -18253,7 +18254,7 @@ $as_echo_n "checking for GCC -fvisibility=hidden option... " >&6; }
     #endif
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -18285,7 +18286,7 @@ $as_echo_n "checking for GCC -Wall option... " >&6; }
 /* end confdefs.h.  */
 int x = 0;
 int
-main ()
+main (void)
 {
 
   ;
@@ -18429,34 +18430,8 @@ else
   $as_echo_n "(cached) " >&6
 else
   # One or both of the vars are not set, and there is no cached value.
-ac_x_includes=no
-ac_x_libraries=no
-# Do we need to do anything special at all?
-ac_save_LIBS=$LIBS
-LIBS="-lX11 $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <X11/Xlib.h>
-int
-main ()
-{
-XrmInitialize ()
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  # We can compile and link X programs with no special options.
-  ac_x_includes=
-  ac_x_libraries=
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS="$ac_save_LIBS"
-# If that didn't work, only try xmkmf and filesystem searches
-# for native compilation.
-if test x"$ac_x_includes" = xno && test "$cross_compiling" = no; then :
-  rm -f -r conftest.dir
+ac_x_includes=no ac_x_libraries=no
+rm -f -r conftest.dir
 if mkdir conftest.dir; then
   cd conftest.dir
   cat >Imakefile <<'_ACEOF'
@@ -18495,7 +18470,7 @@ _ACEOF
   rm -f -r conftest.dir
 fi
 
-  # Standard set of common directories for X headers.
+# Standard set of common directories for X headers.
 # Check X11 before X11Rn because it is often a symlink to the current release.
 ac_x_header_dirs='
 /usr/X11/include
@@ -18521,8 +18496,6 @@ ac_x_header_dirs='
 /usr/local/include/X11R6
 /usr/local/include/X11R5
 /usr/local/include/X11R4
-
-/opt/X11/include
 
 /usr/X386/include
 /usr/x386/include
@@ -18569,7 +18542,7 @@ if test "$ac_x_libraries" = no; then
 /* end confdefs.h.  */
 #include <X11/Xlib.h>
 int
-main ()
+main (void)
 {
 XrmInitialize ()
   ;
@@ -18597,17 +18570,15 @@ rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 fi # $ac_x_libraries = no
 
-fi
-# Record the results.
 case $ac_x_includes,$ac_x_libraries in #(
-  no,* | *,no | *\'*) :
+  no,* | *,no | *\'*)
     # Didn't find X, or a directory has "'" in its name.
-    ac_cv_have_x="have_x=no" ;; #(
-  *) :
+    ac_cv_have_x="have_x=no";; #(
+  *)
     # Record where we found X for the cache.
     ac_cv_have_x="have_x=yes\
 	ac_x_includes='$ac_x_includes'\
-	ac_x_libraries='$ac_x_libraries'" ;;
+	ac_x_libraries='$ac_x_libraries'"
 esac
 fi
 ;; #(
@@ -18657,7 +18628,7 @@ $as_echo_n "checking whether -R must be followed by a space... " >&6; }
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -18674,7 +18645,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -18718,9 +18689,9 @@ rm -f core conftest.err conftest.$ac_objext \
 #ifdef __cplusplus
 extern "C"
 #endif
-char XOpenDisplay ();
+char XOpenDisplay (void);
 int
-main ()
+main (void)
 {
 return XOpenDisplay ();
   ;
@@ -18746,9 +18717,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char dnet_ntoa ();
+char dnet_ntoa (void);
 int
-main ()
+main (void)
 {
 return dnet_ntoa ();
   ;
@@ -18787,9 +18758,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char dnet_ntoa ();
+char dnet_ntoa (void);
 int
-main ()
+main (void)
 {
 return dnet_ntoa ();
   ;
@@ -18847,9 +18818,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char gethostbyname ();
+char gethostbyname (void);
 int
-main ()
+main (void)
 {
 return gethostbyname ();
   ;
@@ -18888,9 +18859,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char gethostbyname ();
+char gethostbyname (void);
 int
-main ()
+main (void)
 {
 return gethostbyname ();
   ;
@@ -18944,9 +18915,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char connect ();
+char connect (void);
 int
-main ()
+main (void)
 {
 return connect ();
   ;
@@ -18993,9 +18964,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char remove ();
+char remove (void);
 int
-main ()
+main (void)
 {
 return remove ();
   ;
@@ -19042,9 +19013,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char shmat ();
+char shmat (void);
 int
-main ()
+main (void)
 {
 return shmat ();
   ;
@@ -19094,9 +19065,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char IceConnectionNumber ();
+char IceConnectionNumber (void);
 int
-main ()
+main (void)
 {
 return IceConnectionNumber ();
   ;
@@ -19342,9 +19313,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char XRenderQueryExtension ();
+char XRenderQueryExtension (void);
 int
-main ()
+main (void)
 {
 return XRenderQueryExtension ();
   ;
@@ -19382,9 +19353,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char XRRQueryExtension ();
+char XRRQueryExtension (void);
 int
-main ()
+main (void)
 {
 return XRRQueryExtension ();
   ;
@@ -19427,7 +19398,7 @@ $as_echo_n "checking for const parameter to _XData32... " >&6; }
               extern int _XData32(Display *dpy,register _Xconst long *data,unsigned len);
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -19470,7 +19441,7 @@ $as_echo_n "checking for QNX Photon support... " >&6; }
           #include <photon/PdDirect.h>
 
 int
-main ()
+main (void)
 {
 
          PgDisplaySettings_t *visual;
@@ -19526,7 +19497,7 @@ $as_echo_n "checking for Carbon framework... " >&6; }
           #include <Carbon/Carbon.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -19570,7 +19541,7 @@ $as_echo_n "checking for Cocoa framework... " >&6; }
           #import <Cocoa/Cocoa.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -19626,7 +19597,7 @@ $as_echo_n "checking for framebuffer console support... " >&6; }
          #include <linux/keyboard.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -19788,7 +19759,7 @@ $as_echo_n "checking for PlayStation 2 GS support... " >&6; }
          #include <linux/ps2/gs.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -19831,7 +19802,7 @@ $as_echo_n "checking for PlayStation 3 Cell support... " >&6; }
       #include <libspe2.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -19875,7 +19846,7 @@ $as_echo_n "checking for GGI support... " >&6; }
          #include <ggi/gii.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -19919,7 +19890,7 @@ $as_echo_n "checking for SVGAlib (1.4.0+) support... " >&6; }
          #include <vgakeyboard.h>
 
 int
-main ()
+main (void)
 {
 
          if ( SCANCODE_RIGHTWIN && SCANCODE_LEFTWIN ) {
@@ -19968,7 +19939,7 @@ $as_echo_n "checking for libVGL support... " >&6; }
          #include <vgl.h>
 
 int
-main ()
+main (void)
 {
 
          VGLBitmap bitmap;
@@ -20017,7 +19988,7 @@ $as_echo_n "checking for wscons support... " >&6; }
          #include <dev/wscons/wsdisplay_usl_io.h>
 
 int
-main ()
+main (void)
 {
 
          int wsmode = WSDISPLAYIO_MODE_DUMBFB;
@@ -20061,7 +20032,7 @@ $as_echo_n "checking for AAlib support... " >&6; }
          #include <aalib.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -20148,7 +20119,7 @@ $as_echo_n "checking for libcaca support... " >&6; }
              #include <caca.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -20201,7 +20172,7 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
          #include <qpe/qpeapplication.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -20254,7 +20225,7 @@ $as_echo_n "checking for PicoGUI support... " >&6; }
          #include <picogui.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -20335,9 +20306,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char appl_init ();
+char appl_init (void);
 int
-main ()
+main (void)
 {
 return appl_init ();
   ;
@@ -20409,7 +20380,7 @@ $as_echo_n "checking for OpenGL (GLX) support... " >&6; }
          #include <GL/glu.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -20443,7 +20414,7 @@ $as_echo_n "checking for OpenGL (Photon) support... " >&6; }
          #include <GL/gl.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -20525,9 +20496,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char OSMesaCreateContext ();
+char OSMesaCreateContext (void);
 int
-main ()
+main (void)
 {
 return OSMesaCreateContext ();
   ;
@@ -20659,7 +20630,7 @@ $as_echo_n "checking for Linux 2.4 unified input interface... " >&6; }
           #include <linux/input.h>
 
 int
-main ()
+main (void)
 {
 
           #ifndef EVIOCGNAME
@@ -20702,7 +20673,7 @@ $as_echo_n "checking for Touchscreen library support... " >&6; }
           #include "tslib.h"
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -20900,7 +20871,7 @@ $as_echo_n "checking for pthreads... " >&6; }
          #include <pthread.h>
 
 int
-main ()
+main (void)
 {
 
          pthread_attr_t type;
@@ -20946,7 +20917,7 @@ $as_echo_n "checking for recursive mutexes... " >&6; }
                   #include <pthread.h>
 
 int
-main ()
+main (void)
 {
 
                   pthread_mutexattr_t attr;
@@ -20974,7 +20945,7 @@ rm -f core conftest.err conftest.$ac_objext \
                   #include <pthread.h>
 
 int
-main ()
+main (void)
 {
 
                   pthread_mutexattr_t attr;
@@ -21009,7 +20980,7 @@ $as_echo_n "checking for pthread semaphores... " >&6; }
                   #include <semaphore.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -21034,7 +21005,7 @@ $as_echo_n "checking for sem_timedwait... " >&6; }
                   #include <semaphore.h>
 
 int
-main ()
+main (void)
 {
 
                   sem_timedwait(NULL, NULL);
@@ -21096,7 +21067,7 @@ $as_echo_n "checking Win32 compiler... " >&6; }
      #include <windows.h>
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -21121,7 +21092,7 @@ $as_echo "$have_win32_gcc" >&6; }
 /* end confdefs.h.  */
 #include <stdlib.h>
 int
-main ()
+main (void)
 {
 return (int) _strtoi64 (NULL,NULL,0);
   ;
@@ -21138,7 +21109,7 @@ rm -f core conftest.err conftest.$ac_objext \
 /* end confdefs.h.  */
 #include <stdlib.h>
 int
-main ()
+main (void)
 {
 return (int) _strtoui64(NULL,NULL,0);
   ;
@@ -21182,7 +21153,7 @@ $as_echo_n "checking OS/2 compiler... " >&6; }
 /* end confdefs.h.  */
 #include <os2.h>
 int
-main ()
+main (void)
 {
 
   ;
@@ -21242,11 +21213,11 @@ fi
 
         ac_fn_c_check_header_mongrel "$LINENO" "dinput.h" "ac_cv_header_dinput_h" "$ac_includes_default"
 if test "x$ac_cv_header_dinput_h" = xyes; then :
-  use_dinput=yes
+  have_dinput=yes
 fi
 
 
-        if test x$have_ddraw = xyes -a x$have_dsound = xyes -a x$use_dinput = xyes; then
+        if test x$have_ddraw = xyes -a x$have_dsound = xyes -a x$have_dinput = xyes; then
             have_directx=yes
         fi
         if test x$enable_video = xyes -a x$have_directx = xyes; then
@@ -21288,7 +21259,7 @@ $as_echo_n "checking for dlopen... " >&6; }
          #include <dlfcn.h>
 
 int
-main ()
+main (void)
 {
 
          #if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED <= 1020
@@ -21323,9 +21294,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char dlopen ();
+char dlopen (void);
 int
-main ()
+main (void)
 {
 return dlopen ();
   ;
@@ -21362,9 +21333,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char dlopen ();
+char dlopen (void);
 int
-main ()
+main (void)
 {
 return dlopen ();
   ;
@@ -21438,9 +21409,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char ldg_open ();
+char ldg_open (void);
 int
-main ()
+main (void)
 {
 return ldg_open ();
   ;
@@ -21493,9 +21464,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char hid_init ();
+char hid_init (void);
 int
-main ()
+main (void)
 {
 return hid_init ();
   ;
@@ -21560,9 +21531,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char hid_init ();
+char hid_init (void);
 int
-main ()
+main (void)
 {
 return hid_init ();
   ;
@@ -21615,7 +21586,7 @@ $as_echo_n "checking for usbhid... " >&6; }
           #endif
 
 int
-main ()
+main (void)
 {
 
           struct report_desc *repdesc;
@@ -21660,7 +21631,7 @@ $as_echo_n "checking for ucr_data member of usb_ctl_report... " >&6; }
               #endif
 
 int
-main ()
+main (void)
 {
 
               struct usb_ctl_report buf;
@@ -21706,7 +21677,7 @@ $as_echo_n "checking for new usbhid API... " >&6; }
               #endif
 
 int
-main ()
+main (void)
 {
 
               report_desc_t d;
@@ -21735,7 +21706,7 @@ $as_echo_n "checking for struct joystick in machine/joystick.h... " >&6; }
               #include <machine/joystick.h>
 
 int
-main ()
+main (void)
 {
 
               struct joystick t;
@@ -21792,9 +21763,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char clock_gettime ();
+char clock_gettime (void);
 int
-main ()
+main (void)
 {
 return clock_gettime ();
   ;
@@ -21836,9 +21807,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char clock_gettime ();
+char clock_gettime (void);
 int
-main ()
+main (void)
 {
 return clock_gettime ();
   ;
@@ -21999,6 +21970,19 @@ case "$host" in
                 have_joystick=yes
             ;;
           esac
+        fi
+        # Set up files for the haptic library
+        if test x$enable_haptic = xyes; then
+           if test x$use_input_events = xyes; then
+             case $ARCH in
+               linux)
+                   $as_echo "#define SDL_HAPTIC_LINUX 1" >>confdefs.h
+
+                   SOURCES="$SOURCES $srcdir/src/haptic/linux/*.c"
+                   have_haptic=yes
+               ;;
+             esac
+           fi
         fi
         # Set up files for the cdrom library
         if test x$enable_cdrom = xyes; then
@@ -22183,6 +22167,14 @@ case "$host" in
             SOURCES="$SOURCES $srcdir/src/joystick/win32/*.c"
             have_joystick=yes
         fi
+        if test x$enable_haptic = xyes; then
+            if test x$have_dinput = xyes; then
+                $as_echo "#define SDL_HAPTIC_DINPUT 1" >>confdefs.h
+
+                SOURCES="$SOURCES $srcdir/src/haptic/win32/SDL_syshaptic.c"
+                have_haptic=yes
+            fi
+        fi
         # Set up files for the cdrom library
         if test x$enable_cdrom = xyes; then
             $as_echo "#define SDL_CDROM_WIN32 1" >>confdefs.h
@@ -22217,7 +22209,7 @@ case "$host" in
         # Set up the system libraries we need
         EXTRA_LDFLAGS="$EXTRA_LDFLAGS -luser32 -lgdi32 -lwinmm"
         if test x$have_directx = xyes; then
-            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ldxguid"
+            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ldxguid -ldinput8 -ldxerr8 -lole32"
         fi
         BUILD_LDFLAGS="$BUILD_LDFLAGS -Wc,-static-libgcc"
         # The Win32 platform requires special setup
@@ -22249,6 +22241,14 @@ case "$host" in
 
             SOURCES="$SOURCES $srcdir/src/joystick/beos/*.cc"
             have_joystick=yes
+        fi
+        # Set up files for the haptic library
+        if test x$enable_haptic = xyes; then
+            $as_echo "#define SDL_HAPTIC_IOKIT 1" >>confdefs.h
+
+            SOURCES="$SOURCES $srcdir/src/haptic/darwin/*.c"
+            have_haptic=yes
+            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -Wl,-framework,ForceFeedback"
         fi
         # Set up files for the cdrom library
         if test x$enable_cdrom = xyes; then
@@ -22566,6 +22566,13 @@ if test x$enable_joystick = xyes; then
     SOURCES="$SOURCES $srcdir/src/joystick/dummy/*.c"
   fi
 fi
+if test x$have_haptic != xyes; then
+    if test x$enable_haptic = xyes; then
+        $as_echo "#define SDL_HAPTIC_DISABLED 1" >>confdefs.h
+
+    fi
+    SOURCES="$SOURCES $srcdir/src/haptic/dummy/*.c"
+fi
 if test x$have_cdrom != xyes; then
     if test x$enable_cdrom = xyes; then
         $as_echo "#define SDL_CDROM_DISABLED 1" >>confdefs.h
@@ -22675,7 +22682,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile sdl-config SDL.spec SDL.qpg sdl.pc"
+ac_config_files="$ac_config_files  Makefile sdl-config SDL.spec SDL.qpg sdl.pc"
 
 ac_config_commands="$ac_config_commands default"
 
@@ -23732,11 +23739,12 @@ do
   case $ac_config_target in
     "include/SDL_config.h") CONFIG_HEADERS="$CONFIG_HEADERS include/SDL_config.h" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
+    "") CONFIG_FILES="$CONFIG_FILES " ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "sdl-config") CONFIG_FILES="$CONFIG_FILES sdl-config" ;;
     "SDL.spec") CONFIG_FILES="$CONFIG_FILES SDL.spec" ;;
     "SDL.qpg") CONFIG_FILES="$CONFIG_FILES SDL.qpg" ;;
-    "sdl.pc") CONFIG_FILES="$CONFIG_FILES sdl.pc" ;;
+    "sdl.pc") CONFIG_FILES="$CONFIG_FILES sdl.pc" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
@@ -24525,7 +24533,7 @@ shlibpath_overrides_runpath=$shlibpath_overrides_runpath
 libname_spec=$lt_libname_spec
 
 # List of archive names.  First name is the real one, the rest are links.
-# The last name is the one that the linker finds with -lNAME
+# The last name is the one that the linker finds with -lNAME.
 library_names_spec=$lt_library_names_spec
 
 # The coded name of the library, if different from the real name.
@@ -24634,7 +24642,7 @@ allow_undefined_flag=$lt_allow_undefined_flag
 no_undefined_flag=$lt_no_undefined_flag
 
 # Flag to hardcode \$libdir into a binary during linking.
-# This must work even if \$libdir does not exist
+# This must work even if \$libdir does not exist.
 hardcode_libdir_flag_spec=$lt_hardcode_libdir_flag_spec
 
 # If ld is used when linking, flag to hardcode \$libdir into a binary
@@ -25019,7 +25027,7 @@ allow_undefined_flag=$lt_allow_undefined_flag_CXX
 no_undefined_flag=$lt_no_undefined_flag_CXX
 
 # Flag to hardcode \$libdir into a binary during linking.
-# This must work even if \$libdir does not exist
+# This must work even if \$libdir does not exist.
 hardcode_libdir_flag_spec=$lt_hardcode_libdir_flag_spec_CXX
 
 # If ld is used when linking, flag to hardcode \$libdir into a binary
