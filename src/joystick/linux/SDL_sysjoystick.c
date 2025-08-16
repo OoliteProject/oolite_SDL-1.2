@@ -782,6 +782,7 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 	SDL_joylist[joystick->index].joy = joystick;
 #else
 	fd = open(SDL_joylist[joystick->index].fname, O_RDONLY, 0);
+	fname = SDL_joylist[joystick->index].fname;
 #endif
 
 	if ( fd < 0 ) {

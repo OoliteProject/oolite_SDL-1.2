@@ -443,7 +443,7 @@ static void handle_mouse(const int numevents, DIDEVICEOBJECTDATA *ptrbuf)
 						if ( button == 3 ) button = 1;
 					}
 					posted = SDL_PrivateMouseButton(state, button,
-										0, 0);
+										0, 0, 0);
 				}
 				old_state >>= 1;
 				new_state >>= 1;
@@ -486,14 +486,15 @@ static void handle_mouse(const int numevents, DIDEVICEOBJECTDATA *ptrbuf)
 						yrel = 0;
 					}
 					timestamp = 0;
-					if((int)ptrbuf[i].dwData > 0)
-						button = SDL_BUTTON_WHEELUP;
+					int move = (int)ptrbuf[i].dwData;
+					if(move > 0)
+						 button = SDL_BUTTON_WHEELUP;
 					else
 						button = SDL_BUTTON_WHEELDOWN;
 					posted = SDL_PrivateMouseButton(
-							SDL_PRESSED, button, 0, 0);
+							SDL_PRESSED, button, 0, 0, move);
 					posted |= SDL_PrivateMouseButton(
-							SDL_RELEASED, button, 0, 0);
+							SDL_RELEASED, button, 0, 0, move);
 					break;
 				case DIMOFS_BUTTON0:
 				case DIMOFS_BUTTON1:
@@ -540,7 +541,7 @@ static void handle_mouse(const int numevents, DIDEVICEOBJECTDATA *ptrbuf)
 						if ( button == 3 ) button = 1;
 					}
 					posted = SDL_PrivateMouseButton(state, button,
-										0, 0);
+										0, 0, 0);
 					break;
 			}
 		}

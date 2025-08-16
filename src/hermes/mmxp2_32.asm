@@ -22,11 +22,11 @@ BITS 32
 
 %include "common.inc"
 	
-SDL_FUNC _ConvertMMXpII32_24RGB888
-SDL_FUNC _ConvertMMXpII32_16RGB565
-SDL_FUNC _ConvertMMXpII32_16BGR565
-SDL_FUNC _ConvertMMXpII32_16RGB555
-SDL_FUNC _ConvertMMXpII32_16BGR555
+SDL_FUNC ConvertMMXpII32_24RGB888
+SDL_FUNC ConvertMMXpII32_16RGB565
+SDL_FUNC ConvertMMXpII32_16BGR565
+SDL_FUNC ConvertMMXpII32_16RGB555
+SDL_FUNC ConvertMMXpII32_16BGR555
 
 ;; Macros for conversion routines
 
@@ -60,7 +60,7 @@ SDL_FUNC _ConvertMMXpII32_16BGR555
 
 SECTION .text
 
-_ConvertMMXpII32_24RGB888:
+ConvertMMXpII32_24RGB888:
 
         ; set up mm6 as the mask, mm7 as zero
         load_immq mm6, mmx32_rgb888_mask
@@ -123,7 +123,7 @@ _ConvertMMXpII32_24RGB888:
 
 
 
-_ConvertMMXpII32_16RGB565:
+ConvertMMXpII32_16RGB565:
 
         ; set up masks
         load_immq mm5, mmx32_rgb565_b
@@ -191,7 +191,7 @@ _ConvertMMXpII32_16RGB565:
 	retn
 
 	
-_ConvertMMXpII32_16BGR565:
+ConvertMMXpII32_16BGR565:
 
         load_immq mm5, mmx32_rgb565_r
         load_immq mm6, mmx32_rgb565_g
@@ -260,7 +260,7 @@ _ConvertMMXpII32_16BGR565:
 .L4:
         retn
 
-_ConvertMMXpII32_16BGR555:
+ConvertMMXpII32_16BGR555:
 
         ; the 16BGR555 converter is identical to the RGB555 one,
         ; except it uses a different multiplier for the pmaddwd
@@ -274,7 +274,7 @@ _ConvertMMXpII32_16BGR555:
 ; would almost certainly be faster, even if only a little.
 ; I did rename 'mmx32_rgb555_add' to 'mmx32_rgb555_mul', which is
 ; (I think) a more accurate name..
-_ConvertMMXpII32_16RGB555:
+ConvertMMXpII32_16RGB555:
 
 	load_immq mm7, mmx32_rgb555_mul
 _convert_bgr555_cheat:
