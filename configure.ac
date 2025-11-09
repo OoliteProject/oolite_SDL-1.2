@@ -263,6 +263,14 @@ if test x$enable_joystick != xyes; then
 else
     SOURCES="$SOURCES $srcdir/src/joystick/*.c"
 fi
+AC_ARG_ENABLE(haptic,
+AC_HELP_STRING([--enable-haptic], [Enable the haptic (force feedback) subsystem [[default=yes]]]),
+              , enable_haptic=yes)
+if test x$enable_haptic != xyes; then
+    AC_DEFINE(SDL_HAPTIC_DISABLED)
+else
+    SOURCES="$SOURCES $srcdir/src/haptic/*.c"
+fi
 AC_ARG_ENABLE(cdrom,
 [AS_HELP_STRING([--enable-cdrom], [Enable the cdrom subsystem [default=yes]])],
               , enable_cdrom=yes)
@@ -2141,8 +2149,8 @@ CheckDIRECTX()
         have_directx=no
         AC_CHECK_HEADER(ddraw.h, have_ddraw=yes)
         AC_CHECK_HEADER(dsound.h, have_dsound=yes)
-        AC_CHECK_HEADER(dinput.h, use_dinput=yes)
-        if test x$have_ddraw = xyes -a x$have_dsound = xyes -a x$use_dinput = xyes; then
+        AC_CHECK_HEADER(dinput.h, have_dinput=yes)
+        if test x$have_ddraw = xyes -a x$have_dsound = xyes -a x$have_dinput = xyes; then
             have_directx=yes
         fi
         if test x$enable_video = xyes -a x$have_directx = xyes; then
@@ -2483,6 +2491,18 @@ case "$host" in
             ;;
           esac
         fi
+        # Set up files for the haptic library
+        if test x$enable_haptic = xyes; then
+           if test x$use_input_events = xyes; then
+             case $ARCH in
+               linux)
+                   AC_DEFINE(SDL_HAPTIC_LINUX)
+                   SOURCES="$SOURCES $srcdir/src/haptic/linux/*.c"
+                   have_haptic=yes
+               ;;
+             esac
+           fi
+        fi
         # Set up files for the cdrom library
         if test x$enable_cdrom = xyes; then
           case $ARCH in
@@ -2647,6 +2667,13 @@ case "$host" in
             SOURCES="$SOURCES $srcdir/src/joystick/win32/*.c"
             have_joystick=yes
         fi
+        if test x$enable_haptic = xyes; then
+            if test x$have_dinput = xyes; then
+                AC_DEFINE(SDL_HAPTIC_DINPUT)
+                SOURCES="$SOURCES $srcdir/src/haptic/win32/SDL_syshaptic.c"
+                have_haptic=yes
+            fi
+        fi
         # Set up files for the cdrom library
         if test x$enable_cdrom = xyes; then
             AC_DEFINE(SDL_CDROM_WIN32)
@@ -2677,7 +2704,7 @@ case "$host" in
         # Set up the system libraries we need
         EXTRA_LDFLAGS="$EXTRA_LDFLAGS -luser32 -lgdi32 -lwinmm"
         if test x$have_directx = xyes; then
-            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ldxguid"
+            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ldxguid -ldinput8 -ldxerr8 -lole32"
         fi
         BUILD_LDFLAGS="$BUILD_LDFLAGS -Wc,-static-libgcc"
         # The Win32 platform requires special setup
@@ -2707,6 +2734,13 @@ case "$host" in
             AC_DEFINE(SDL_JOYSTICK_BEOS)
             SOURCES="$SOURCES $srcdir/src/joystick/beos/*.cc"
             have_joystick=yes
+        fi
+        # Set up files for the haptic library
+        if test x$enable_haptic = xyes; then
+            AC_DEFINE(SDL_HAPTIC_IOKIT)
+            SOURCES="$SOURCES $srcdir/src/haptic/darwin/*.c"
+            have_haptic=yes
+            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -Wl,-framework,ForceFeedback"
         fi
         # Set up files for the cdrom library
         if test x$enable_cdrom = xyes; then
@@ -2997,6 +3031,12 @@ if test x$enable_joystick = xyes; then
     AC_DEFINE(SDL_JOYSTICK_DUMMY)
     SOURCES="$SOURCES $srcdir/src/joystick/dummy/*.c"
   fi
+fi
+if test x$have_haptic != xyes; then
+    if test x$enable_haptic = xyes; then
+        AC_DEFINE(SDL_HAPTIC_DISABLED)
+    fi
+    SOURCES="$SOURCES $srcdir/src/haptic/dummy/*.c"
 fi
 if test x$have_cdrom != xyes; then
     if test x$enable_cdrom = xyes; then

@@ -13,7 +13,7 @@ BITS 32
 
 %include "common.inc"
 
-SDL_FUNC _ConvertX86
+SDL_FUNC ConvertX86
 
 SECTION .text
 		
@@ -32,7 +32,7 @@ SECTION .text
 ;;  32:	void (*converter_function)() 
 ;;  36: int32 *lookup
 	
-_ConvertX86:
+ConvertX86:
 	push ebp
 	mov ebp,esp
 

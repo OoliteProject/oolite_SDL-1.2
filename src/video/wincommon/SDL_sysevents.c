@@ -453,7 +453,7 @@ LRESULT CALLBACK WinMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #endif
 				}
 				posted = SDL_PrivateMouseButton(
-							state, button, x, y);
+							state, button, x, y, 0);
 
 				/*
 				 * MSDN says:
@@ -475,7 +475,7 @@ LRESULT CALLBACK WinMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #if (_WIN32_WINNT >= 0x0400) || (_WIN32_WINDOWS > 0x0400)
 		case WM_MOUSEWHEEL: 
 			if ( SDL_VideoSurface && ! DINPUT() ) {
-				int move = (short)HIWORD(wParam);
+				short move = GET_WHEEL_DELTA_WPARAM(wParam);
 				if ( move ) {
 					Uint8 button;
 					if ( move > 0 )
@@ -483,9 +483,9 @@ LRESULT CALLBACK WinMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					else
 						button = SDL_BUTTON_WHEELDOWN;
 					posted = SDL_PrivateMouseButton(
-						SDL_PRESSED, button, 0, 0);
+						SDL_PRESSED, button, 0, 0, move);
 					posted |= SDL_PrivateMouseButton(
-						SDL_RELEASED, button, 0, 0);
+						SDL_RELEASED, button, 0, 0, move);
 				}
 			}
 			return(0);

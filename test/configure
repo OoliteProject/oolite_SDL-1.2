@@ -1434,8 +1434,8 @@ fi
 
 # ac_fn_c_try_run LINENO
 # ----------------------
-# Try to run conftest.$ac_ext, and return whether this succeeded. Assumes that
-# executables *can* be run.
+# Try to link conftest.$ac_ext, and return whether this succeeded. Assumes
+# that executables *can* be run.
 ac_fn_c_try_run ()
 {
   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
@@ -1667,8 +1667,6 @@ done
 # WARNING: Use '\'' to represent an apostrophe within the trap.
 # WARNING: Do not start the trap code with a newline, due to a FreeBSD 4.0 bug.
 trap 'exit_status=$?
-  # Sanitize IFS.
-  IFS=" ""	$as_nl"
   # Save into config.log some information that might help in debugging.
   {
     echo
@@ -2345,7 +2343,7 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -2485,11 +2483,9 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <stdio.h>
 int
-main ()
+main (void)
 {
 FILE *f = fopen ("conftest.out", "w");
- if (!f)
-  return 1;
  return ferror (f) || fclose (f) != 0;
 
   ;
@@ -2501,9 +2497,7 @@ ac_clean_files="$ac_clean_files conftest.out"
 # the compiler is broken, or we cross compile.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are cross compiling" >&5
 $as_echo_n "checking whether we are cross compiling... " >&6; }
-if test "$cross_compiling" = maybe && test "x$build" != "x$host"; then
-  cross_compiling=yes
-elif test "$cross_compiling" != yes; then
+if test "$cross_compiling" != yes; then
   { { ac_try="$ac_link"
 case "(($ac_try" in
   *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
@@ -2553,7 +2547,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -2604,7 +2598,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 #ifndef __GNUC__
        choke me
@@ -2645,7 +2639,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -2660,7 +2654,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -2676,7 +2670,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
   ;
@@ -2725,9 +2719,7 @@ struct stat;
 /* Most of the following tests are stolen from RCS 5.7's src/conf.sh.  */
 struct buf { int x; };
 FILE * (*rcsopen) (struct buf *, struct stat *, int);
-static char *e (p, i)
-     char **p;
-     int i;
+static char *e (char **p, int i)
 {
   return p[i];
 }
@@ -2762,7 +2754,7 @@ int pairnames (int, char **, FILE *(*)(struct buf *, struct stat *, int), int, i
 int argc;
 char **argv;
 int
-main ()
+main (void)
 {
 return f (e, argv, 0) != argv[0]  ||  f (e, argv, 1) != argv[1];
   ;
@@ -2817,7 +2809,7 @@ else
 /* end confdefs.h.  */
 
 int
-main ()
+main (void)
 {
 
 #ifndef __cplusplus
@@ -3383,7 +3375,7 @@ int main(int argc, char *argv[])
 #define main K_and_R_C_main
 
 int
-main ()
+main (void)
 {
  return 0;
   ;
@@ -3583,34 +3575,8 @@ else
   $as_echo_n "(cached) " >&6
 else
   # One or both of the vars are not set, and there is no cached value.
-ac_x_includes=no
-ac_x_libraries=no
-# Do we need to do anything special at all?
-ac_save_LIBS=$LIBS
-LIBS="-lX11 $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <X11/Xlib.h>
-int
-main ()
-{
-XrmInitialize ()
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  # We can compile and link X programs with no special options.
-  ac_x_includes=
-  ac_x_libraries=
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS="$ac_save_LIBS"
-# If that didn't work, only try xmkmf and filesystem searches
-# for native compilation.
-if test x"$ac_x_includes" = xno && test "$cross_compiling" = no; then :
-  rm -f -r conftest.dir
+ac_x_includes=no ac_x_libraries=no
+rm -f -r conftest.dir
 if mkdir conftest.dir; then
   cd conftest.dir
   cat >Imakefile <<'_ACEOF'
@@ -3649,7 +3615,7 @@ _ACEOF
   rm -f -r conftest.dir
 fi
 
-  # Standard set of common directories for X headers.
+# Standard set of common directories for X headers.
 # Check X11 before X11Rn because it is often a symlink to the current release.
 ac_x_header_dirs='
 /usr/X11/include
@@ -3675,8 +3641,6 @@ ac_x_header_dirs='
 /usr/local/include/X11R6
 /usr/local/include/X11R5
 /usr/local/include/X11R4
-
-/opt/X11/include
 
 /usr/X386/include
 /usr/x386/include
@@ -3723,7 +3687,7 @@ if test "$ac_x_libraries" = no; then
 /* end confdefs.h.  */
 #include <X11/Xlib.h>
 int
-main ()
+main (void)
 {
 XrmInitialize ()
   ;
@@ -3751,17 +3715,15 @@ rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 fi # $ac_x_libraries = no
 
-fi
-# Record the results.
 case $ac_x_includes,$ac_x_libraries in #(
-  no,* | *,no | *\'*) :
+  no,* | *,no | *\'*)
     # Didn't find X, or a directory has "'" in its name.
-    ac_cv_have_x="have_x=no" ;; #(
-  *) :
+    ac_cv_have_x="have_x=no";; #(
+  *)
     # Record where we found X for the cache.
     ac_cv_have_x="have_x=yes\
 	ac_x_includes='$ac_x_includes'\
-	ac_x_libraries='$ac_x_libraries'" ;;
+	ac_x_libraries='$ac_x_libraries'"
 esac
 fi
 ;; #(
@@ -3808,7 +3770,7 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  #include "SDL_opengl.h"
 
 int
-main ()
+main (void)
 {
 
 

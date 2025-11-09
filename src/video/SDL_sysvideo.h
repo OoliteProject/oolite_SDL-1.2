@@ -281,6 +281,7 @@ struct SDL_VideoDevice {
 		int green_size;
 		int blue_size;
 		int alpha_size;
+		int pixel_type_rgba_float;
 		int depth_size;
 		int buffer_size;
 		int stencil_size;

@@ -241,6 +241,11 @@ int WIN_GL_SetupWindow(_THIS)
 		*iAttr++ = this->gl_config.alpha_size;
 	}
 
+	if ( this->gl_config.pixel_type_rgba_float ) {
+		*iAttr++ = WGL_PIXEL_TYPE_ARB;
+		*iAttr++ = WGL_TYPE_RGBA_FLOAT_ARB;
+	}
+
 	*iAttr++ = WGL_DOUBLE_BUFFER_ARB;
 	*iAttr++ = this->gl_config.double_buffer;
 
@@ -477,15 +482,26 @@ int WIN_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value)
 		    case SDL_GL_MULTISAMPLESAMPLES:
 			wgl_attrib = WGL_SAMPLES_ARB;
 			break;
-		    case SDL_GL_ACCELERATED_VISUAL:
-			wgl_attrib = WGL_ACCELERATION_ARB;
-			this->gl_data->wglGetPixelFormatAttribivARB(GL_hdc, pixel_format, 0, 1, &wgl_attrib, value);
-			if ( *value == WGL_NO_ACCELERATION_ARB ) {
-				*value = SDL_FALSE;
-			} else {
-				*value = SDL_TRUE;
+			case SDL_GL_ACCELERATED_VISUAL: {
+				wgl_attrib = WGL_ACCELERATION_ARB;
+				this->gl_data->wglGetPixelFormatAttribivARB(GL_hdc, pixel_format, 0, 1, &wgl_attrib, value);
+				if ( *value == WGL_NO_ACCELERATION_ARB ) {
+					*value = SDL_FALSE;
+				} else {
+					*value = SDL_TRUE;
+				}
+				return 0;
 			}
-			return 0;
+			case SDL_GL_PIXEL_TYPE_FLOAT: {
+				wgl_attrib = WGL_PIXEL_TYPE_ARB;
+				this->gl_data->wglGetPixelFormatAttribivARB(GL_hdc, pixel_format, 0, 1, &wgl_attrib, value);
+				if ( *value == WGL_TYPE_RGBA_FLOAT_ARB ) {
+					*value = SDL_TRUE;
+				} else {
+					*value = SDL_FALSE;
+				}
+				return 0;
+			}
 		    default:
 			return(-1);
 		}
@@ -557,6 +573,10 @@ int WIN_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value)
 			return -1;
 		}
 		break;
+		case SDL_GL_PIXEL_TYPE_FLOAT:
+			// cannot query attribute unless WGL_ARB_pixel_format is 1
+			*value = -1;
+			break;
 	    default:
 		retval = -1;
 		break;

@@ -64,7 +64,7 @@ void SDL_ResetMouse(void)
 	Uint8 i;
 	for ( i = 1; i < sizeof(SDL_ButtonState)*8; ++i ) {
 		if ( SDL_ButtonState & SDL_BUTTON(i) ) {
-			SDL_PrivateMouseButton(SDL_RELEASED, i, 0, 0);
+			SDL_PrivateMouseButton(SDL_RELEASED, i, 0, 0, 0);
 		}
 	}
 }
@@ -194,7 +194,7 @@ printf("Mouse event didn't change state - dropped!\n");
 	return(posted);
 }
 
-int SDL_PrivateMouseButton(Uint8 state, Uint8 button, Sint16 x, Sint16 y)
+int SDL_PrivateMouseButton(Uint8 state, Uint8 button, Sint16 x, Sint16 y, short wDelta)
 {
 	SDL_Event event;
 	int posted;
@@ -258,6 +258,7 @@ int SDL_PrivateMouseButton(Uint8 state, Uint8 button, Sint16 x, Sint16 y)
 		event.button.button = button;
 		event.button.x = x;
 		event.button.y = y;
+		event.button.wheelDelta = button == SDL_BUTTON_WHEELUP || SDL_BUTTON_WHEELDOWN ? wDelta : 0;
 		if ( (SDL_EventOK == NULL) || (*SDL_EventOK)(&event) ) {
 			posted = 1;
 			SDL_PushEvent(&event);

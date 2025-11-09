@@ -14,16 +14,16 @@ BITS 32
 
 %include "common.inc"
 
-SDL_FUNC _ConvertX86p16_16BGR565
-SDL_FUNC _ConvertX86p16_16RGB555
-SDL_FUNC _ConvertX86p16_16BGR555
-SDL_FUNC _ConvertX86p16_8RGB332
+SDL_FUNC ConvertX86p16_16BGR565
+SDL_FUNC ConvertX86p16_16RGB555
+SDL_FUNC ConvertX86p16_16BGR555
+SDL_FUNC ConvertX86p16_8RGB332
 
-EXTERN _ConvertX86
+EXTERN ConvertX86
 
 SECTION .text
 
-_ConvertX86p16_16BGR565:
+ConvertX86p16_16BGR565:
 
     ; check short
     cmp ecx,BYTE 16
@@ -133,7 +133,7 @@ _ConvertX86p16_16BGR565:
 
 
 
-_ConvertX86p16_16RGB555:
+ConvertX86p16_16RGB555:
 
     ; check short
     cmp ecx,BYTE 32
@@ -241,7 +241,7 @@ _ConvertX86p16_16RGB555:
 
 
 
-_ConvertX86p16_16BGR555:
+ConvertX86p16_16BGR555:
 
     ; check short
     cmp ecx,BYTE 16
@@ -359,7 +359,7 @@ _ConvertX86p16_16BGR555:
 
 
 
-_ConvertX86p16_8RGB332:
+ConvertX86p16_8RGB332:
 
     ; check short
     cmp ecx,BYTE 16

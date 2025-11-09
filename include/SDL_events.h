@@ -147,6 +147,7 @@ typedef struct SDL_MouseButtonEvent {
 	Uint8 button;	/**< The mouse button index */
 	Uint8 state;	/**< SDL_PRESSED or SDL_RELEASED */
 	Uint16 x, y;	/**< The X/Y coordinates of the mouse at press time */
+	short wheelDelta; /* The delta of the mousewheel movement */
 } SDL_MouseButtonEvent;
 
 /** Joystick axis motion event structure */
